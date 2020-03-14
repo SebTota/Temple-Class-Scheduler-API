@@ -39,12 +39,24 @@ app.get('/classes',(req,res)=>{
 
 // Retrieve a single class based on class subject
 app.get('/classes/:subject',(req,res)=>{
+    /*
+    Note:
+    Node also allows app.get('/classes/subject',(req,res)=>{
+    var subject = req.query.subject;
+    where subject is a required key in the GET request
+    */
     var subject = req.params.subject;
     mysqlConnection.query('SELECT * FROM Classes WHERE subject = ?', [subject],(err, rows, fields)=>{
         // Print query
-        if(!err)
-            res.send(rows); // Show array at localhost:port
-        // console.log(rows); // Log all entries in console
+        if(!err) {
+            if (rows.length <= 0) {
+                // API call to search for class
+                res.send("No data yet. Call Java method.");
+            } else {
+                res.send(rows);
+            }
+            // console.log(rows); // Log all entries in console
+        }
         else
             console.log(err);
     });
