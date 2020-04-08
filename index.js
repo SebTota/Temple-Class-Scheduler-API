@@ -25,7 +25,7 @@ mysqlConnection.connect((err)=> {
 app.listen(3000, ()=>console.log("No error. Express server running on port 3000"));
 
 // Retrieve all classes from class_scheduler database
-app.get('/classes',(req,res)=>{
+app.get('/allClasses',(req,res)=>{
     // Log all entries in Classes table as array
     mysqlConnection.query('SELECT * FROM Classes',(err, rows, fields)=>{
         // Print query
@@ -46,7 +46,7 @@ app.get('/classes/:subject',(req,res)=>{
     where subject is a required key in the GET request
     */
     var subject = req.params.subject;
-    mysqlConnection.query('SELECT * FROM Classes WHERE subject = ?', [subject],(err, rows, fields)=>{
+    mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],(err, rows, fields)=>{
         // Print query
         if(!err) {
             if (rows.length <= 0) {
@@ -60,4 +60,30 @@ app.get('/classes/:subject',(req,res)=>{
         else
             console.log(err);
     });
+});
+
+// Retrieve an array of classes
+app.get('/classes',(req,res)=>{
+    var subjects = req.query.arr;
+    console.log(req.query.arr);
+    for (var i =0; i < subjects.size; i++) {
+        console.log(subjects.get(i));
+    }
+    /*
+    mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],(err, rows, fields)=>{
+        // Print query
+        if(!err) {
+            if (rows.length <= 0) {
+                // API call to search for class
+                res.send("No data yet. Call Java method.");
+            } else {
+                res.send(rows);
+            }
+            // console.log(rows); // Log all entries in console
+        }
+        else
+            console.log(err);
+    });
+
+     */
 });
