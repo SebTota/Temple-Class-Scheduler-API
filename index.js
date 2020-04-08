@@ -65,11 +65,11 @@ app.get('/class/:subject',(req,res)=>{
 });
 
 // Retrieve an array of classes
-// ip:port/classes?arr=
-// Concat all 'arr' arguments into an array allowing you to pass in an array of classes
+// ip:port/classes?cls=
+// Concat all 'cls' arguments into an array allowing you to pass in an array of classes
 app.get('/classes',(req,res)=>{
     // Read data from API call and parse to array
-    var courses = req.query.arr;
+    var courses = req.query.cls;
 
     // Create SQL Query string to include all course arguments
     var sqlString = ("('" + courses.toString().replace(",", "','") + "')");
