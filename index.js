@@ -5,7 +5,9 @@ const bodyparser = require('body-parser');
 
 app.use(bodyparser.json());
 
-// Set all variables to connect to AWS database
+let noDataResponse = "Class Does Not Exist";
+
+// Set database variables by calling global variables
 var mysqlConnection = mysql.createConnection({
     host: process.env.AWS_URL,
     user: process.env.AWS_USER,
@@ -26,51 +28,55 @@ app.listen(3000, ()=>console.log("No error. Express server running on port 3000"
 
 // Retrieve all classes from class_scheduler database
 app.get('/allClasses',(req,res)=>{
-    // Log all entries in Classes table as array
+    // Query all all entries from Classes table
     mysqlConnection.query('SELECT * FROM Classes',(err, rows, fields)=>{
         // Print query
         if(!err)
-            res.send(rows); // Show array at localhost:port
-            // console.log(rows); // Log all entries in console
-        else
-            console.log(err);
+            res.send(rows); // Return results
+        else {
+            console.log(err); // Log error
+            res.send(500); // Return server error
+        }
     });
 });
 
 // Retrieve a single class based on class subject
-app.get('/classes/:subject',(req,res)=>{
-    /*
-    Note:
-    Node also allows app.get('/classes/subject',(req,res)=>{
-    var subject = req.query.subject;
-    where subject is a required key in the GET request
-    */
+// ip:port//class/CLASS
+app.get('/class/:subject',(req,res)=>{
     var subject = req.params.subject;
-    mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],(err, rows, fields)=>{
+    mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],
+        (err, rows, fields)=>{
         // Print query
         if(!err) {
             if (rows.length <= 0) {
-                // API call to search for class
-                res.send("No data yet. Call Java method.");
+                // No results found
+                res.send(noDataResponse);
             } else {
                 res.send(rows);
             }
-            // console.log(rows); // Log all entries in console
         }
-        else
+        else {
+            // Log and return server error
             console.log(err);
+            res.send(500);
+        }
+
     });
 });
 
 // Retrieve an array of classes
+// ip:port/classes?arr=
+// Concat all 'arr' arguments into an array allowing you to pass in an array of classes
 app.get('/classes',(req,res)=>{
-    var subjects = req.query.arr;
-    console.log(req.query.arr);
-    for (var i =0; i < subjects.size; i++) {
-        console.log(subjects.get(i));
-    }
-    /*
-    mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],(err, rows, fields)=>{
+    // Read data from API call and parse to array
+    var courses = req.query.arr;
+
+    // Create SQL Query string to include all course arguments
+    var sqlString = ("('" + courses.toString().replace(",", "','") + "')");
+
+    // Query database for classes
+    mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse in ' + sqlString, null,
+        (err, rows, fields)=>{
         // Print query
         if(!err) {
             if (rows.length <= 0) {
@@ -79,11 +85,8 @@ app.get('/classes',(req,res)=>{
             } else {
                 res.send(rows);
             }
-            // console.log(rows); // Log all entries in console
         }
         else
             console.log(err);
     });
-
-     */
 });

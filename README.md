@@ -30,7 +30,9 @@ Run application on port 3000
 ##### API examples
 Query entire database: `http://ip:3000/allClasses` 
 
-Query CLASS1 and CLASS2: `http://ip:3000/classes?arr=CLASS1&arr=CLASS2`
+Query for all sections of CLASS: `http://ip:3000/class/CLASS`
+
+Query for all sections of CLASS1 and CLASS2: `http://ip:3000/classes?arr=CLASS1&arr=CLASS2`
 
 
 
