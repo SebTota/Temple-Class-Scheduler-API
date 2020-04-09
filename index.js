@@ -7,8 +7,7 @@ const https = require('https');
 const fs = require('fs');
 const cors = require('cors'); // CORS issue fix
 
-// Default Responses
-let noDataResponse = "Class Does Not Exist";
+const dneResponse = "Class Does Not Exist"; // Class DNE response
 
 // CORS issue fix
 app.use(cors({origin: '*'})); // Adds CORS header to allow cross origin resource sharing
@@ -29,6 +28,9 @@ mysqlConnection.connect((err)=> {
     else
         console.log("Error connecting database: " + JSON.stringify(err, undefined, 2));
 });
+
+// For local testing only
+// app.listen(3000, ()=>console.log("No error. Express server running on port 3000"));
 
 // Start listening for api calls on port 3000
 // Reads key.pem and cert.pem files for SSL config
@@ -51,8 +53,30 @@ app.get('/allClasses',(req,res)=>{
     });
 });
 
+// Check if class exists in database
+// url:port/checkClass?cls=ClassToCheck
+// Query the database to see if a class with ClassToCheck subjectCourse exists
+app.get('/checkClass',(req,res)=>{
+    var course = req.query.cls;
+    mysqlConnection.query("SELECT crn FROM Classes WHERE subjectCourse = ? LIMIT 1", [course],
+        (err, rows, fields)=>{
+        if (!err) {
+            if (rows.length <= 0) {
+                res.send(dneResponse);
+            } else {
+                res.send("Class Found");
+            }
+        } else {
+            // Log and respond with server error
+            console.log(err);
+            res.send(500);
+        }
+        });
+});
+
+
 // Retrieve a single class based on class subject
-// url:port//class/CLASS
+// url:port/class/ClassToCheck
 app.get('/class/:subject',(req,res)=>{
     var subject = req.params.subject;
     mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],
@@ -61,7 +85,7 @@ app.get('/class/:subject',(req,res)=>{
         if(!err) {
             if (rows.length <= 0) {
                 // No results found
-                res.send(noDataResponse);
+                res.send(dneResponse);
             } else {
                 res.send(rows);
             }
@@ -71,7 +95,6 @@ app.get('/class/:subject',(req,res)=>{
             console.log(err);
             res.send(500);
         }
-
     });
 });
 
