@@ -1,11 +1,18 @@
 const mysql = require('mysql');
-const express = require('express');
-var app = express();
+const app = require('express')();
+//const express = require('express');
+//var appl = express();
 const bodyparser = require('body-parser');
+const https = require('https');
+const fs = require('fs');
+const cors = require('cors'); // CORS issue fix
 
-app.use(bodyparser.json());
-
+// Default Responses
 let noDataResponse = "Class Does Not Exist";
+
+// CORS issue fix
+app.use(cors({origin: '*'})); // Adds CORS header to allow cross origin resource sharing
+app.use(bodyparser.json());
 
 // Set database variables by calling global variables
 var mysqlConnection = mysql.createConnection({
@@ -24,7 +31,11 @@ mysqlConnection.connect((err)=> {
 });
 
 // Start listening for api calls on port 3000
-app.listen(3000, ()=>console.log("No error. Express server running on port 3000"));
+// Reads key.pem and cert.pem files for SSL config
+https.createServer({
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem')
+}, app).listen(3000);
 
 // Retrieve all classes from class_scheduler database
 app.get('/allClasses',(req,res)=>{
@@ -41,7 +52,7 @@ app.get('/allClasses',(req,res)=>{
 });
 
 // Retrieve a single class based on class subject
-// ip:port//class/CLASS
+// url:port//class/CLASS
 app.get('/class/:subject',(req,res)=>{
     var subject = req.params.subject;
     mysqlConnection.query('SELECT * FROM Classes WHERE subjectCourse = ?', [subject],
@@ -65,7 +76,7 @@ app.get('/class/:subject',(req,res)=>{
 });
 
 // Retrieve an array of classes
-// ip:port/classes?cls=
+// url:port/classes?cls=
 // Concat all 'cls' arguments into an array allowing you to pass in an array of classes
 app.get('/classes',(req,res)=>{
     // Read data from API call and parse to array

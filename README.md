@@ -28,11 +28,11 @@ Run application on port 3000
 `node index.js`
 
 ##### API examples
-Query entire database: `http://ip:3000/allClasses` 
+Query entire database: `http://url:3000/allClasses` 
 
-Query for all sections of CLASS: `http://ip:3000/class/CLASS`
+Query for all sections of CLASS: `http://url:3000/class/CLASS`
 
-Query for all sections of CLASS1 and CLASS2: `http://ip:3000/classes?cls=CLASS1&cls=CLASS2`
+Query for all sections of CLASS1 and CLASS2: `http://url:3000/classes?cls=CLASS1&cls=CLASS2`
 
 
 
