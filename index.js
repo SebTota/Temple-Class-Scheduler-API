@@ -62,7 +62,7 @@ app.get('/checkClass',(req,res)=>{
         (err, rows, fields)=>{
         if (!err) {
             if (rows.length <= 0) {
-                res.send(dneResponse);
+                res.send(JSON.stringify(dneResponse));
             } else {
                 res.send("Class Found");
             }
@@ -85,7 +85,7 @@ app.get('/class/:subject',(req,res)=>{
         if(!err) {
             if (rows.length <= 0) {
                 // No results found
-                res.send(dneResponse);
+                res.send(JSON.stringify(dneResponse));
             } else {
                 res.send(rows);
             }
