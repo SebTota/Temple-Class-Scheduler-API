@@ -124,3 +124,34 @@ app.get('/classes',(req,res)=>{
             console.log(err);
     });
 });
+
+// Returns list of instructors that names contain "search" keyword
+// Upto 5 results will be returned
+app.get('/searchProfList/:search', (req,res)=>{
+    var searchName = req.params.search;
+
+    mysqlConnection.query("SELECT * FROM `Instructors` WHERE `name` LIKE \'%" + searchName + "%\' Limit 5;", null, (err, rows, fields)=>{
+        if (!err) {
+            if (rows.length > 0) {
+                res.send(JSON.stringify({
+                    success: true,
+                    numResults: rows.length,
+                    data: rows
+                }));
+            } else {
+                res.send(JSON.stringify({
+                    success: true,
+                    numResults: 0,
+                    data: null
+                }));
+            }
+        } else {
+            console.log(err);
+            res.send(JSON.stringify({
+                success: false,
+                numResults: 0,
+                data: null
+            }))
+        }
+    })
+});

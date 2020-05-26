@@ -38,5 +38,6 @@ Query for all sections of CLASS: `/class/CLASS`
 
 Query for all sections of CLASS1 and CLASS2: `/classes?cls=CLASS1&cls=CLASS2`
 
+Query for all instructors based on search: '/searchProfList/search'
 
 
