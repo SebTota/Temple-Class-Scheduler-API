@@ -3,8 +3,6 @@ const express = require('express');
 var app = express();
 const bodyparser = require('body-parser');
 const cors = require('cors'); // CORS issue fix
-const bcrypt = require('bcrypt');
-const saltRounds = 12;
 
 
 app.use(cors({origin: '*'})); // Adds CORS header to allow cross origin resource sharing
@@ -185,13 +183,13 @@ app.get('/searchClassList/:search', (req,res)=>{
 });
 
 
-// Password auth
-function checkPass(plainTextPass, savedHash) {
-    bcrypt.compare(plainTextPass, savedHash, function(err, res) {
-        if (res === true) {
-            // Password math
-        } else {
-            // Wrong password
-        }
-    });
-}
+
+
+
+
+
+
+
+
+
+
