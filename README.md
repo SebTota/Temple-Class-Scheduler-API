@@ -30,14 +30,15 @@ Run application on port 3000
 ##### API examples
 Base url: `https://url/ip:3000`
 
-Query entire database: `/allClasses` 
+Return entire database: `/allClasses` 
 
-Query to see if class exists: `/checkClass?cls=CLASS`
+Return if class exists: `/checkClass?cls=CLASS`
 
-Query for all sections of CLASS: `/class/CLASS`
+Return all sections of CLASS: `/class/CLASS`
 
-Query for all sections of CLASS1 and CLASS2: `/classes?cls=CLASS1&cls=CLASS2`
+Return all sections of CLASS1 and CLASS2: `/classes?cls=CLASS1&cls=CLASS2`
 
-Query for all instructors based on search: '/searchProfList/search'
+Return all instructors containing the keyword search: `/searchProfList/search`
 
+Return all classes containing the keyword search: `/searchClassList/search`
 
