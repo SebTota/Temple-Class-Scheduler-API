@@ -16,19 +16,17 @@ Install Node.js: https://nodejs.org/en/download/
 
 Install required packages:
 ``` bash
-npm instlal mysql
-npm install express
-npm install body-parser
+npm instlal
 ```
 
 #### Usage
 ##### Server
-Run application on port 3000
+Run application on port 4001
 
 `node index.js`
 
 ##### API examples
-Base url: `https://url/ip:3000`
+Base url: `https://url/ip:4001`
 
 Return entire database: `/allClasses` 
 
